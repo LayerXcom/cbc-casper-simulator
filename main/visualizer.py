@@ -1,0 +1,45 @@
+import yaml
+from graphviz import Digraph
+
+
+class Visualizer:
+    @classmethod
+    def block_store(cls, input, output):
+        yaml = cls.yml_to_obj(input)
+
+        name = yaml["name"]
+        slot = yaml["current_slot"]
+        label = "{}'s view in slot {}".format(name, slot)
+        G = Digraph(format='png')
+        G.attr(label=label)
+        G.attr(fontsize='30')
+
+        messages = yaml["state"]["messages"]
+        for message in messages:
+            h = str(message["hash"])
+            sender = message["sender"]
+            slot = str(message["slot"])
+            label = "message id: {}\n sender: {}\n slot: {} ".format(
+                h, sender, slot)
+            G.node(h, label)
+
+        # parent-child
+        for message in messages:
+            child_hash = message["hash"]
+            parent_hash = message["parent_hash"]
+            if parent_hash is not None:
+                G.edge(str(child_hash), str(parent_hash), color='blue')
+
+        # justification
+        for message in messages:
+            child_hash = str(message["hash"])
+            justification = message["justification"]
+            for m in justification:
+                parent_hash = str(m["message_hash"])
+                G.edge(child_hash, parent_hash, color='red')
+
+        G.render(output)
+
+    @classmethod
+    def yml_to_obj(cls, name):
+        return yaml.safe_load(open(name))
