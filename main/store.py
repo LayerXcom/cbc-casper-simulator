@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from main.validator import Validator
 
 
-class MessageStore:
+class Store:
     def __init__(self):
         self.message_history: Dict[Validator, List[int]] = dict()
         self.messages: Dict[int, Message] = dict()
@@ -57,7 +57,7 @@ class MessageStore:
 
 
 class BlockStore:
-    def __init__(self, message_store: MessageStore):
+    def __init__(self, message_store: Store):
         self.genesis: Block = message_store.genesis.estimate
         self.children: Dict[Block, List[Block]] = dict()
         self.parent: Dict[Block, Block] = dict()

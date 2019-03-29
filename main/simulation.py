@@ -1,8 +1,7 @@
 from main.message import Message
-from main.validator import Validator
-from main.store.validator_store import ValidatorStore
-from main.store.message_store import MessageStore
-from main.ticker import Ticker
+from main.validator_set import ValidatorSet
+from main.network.model import Model as NetworkModel
+from main.util.ticker import Ticker
 
 
 class SimulationConfig:
@@ -21,35 +20,34 @@ class Simulation:
             config: SimulationConfig = None
     ):
         if config is None:
-            self.config = SimulationConfig(2)
+            self.config = SimulationConfig(5)
         else:
             self.config = config
 
-        self.message_store = MessageStore()
-
     def start(self):
         ticker = Ticker()
-        validator_store = ValidatorStore()
-        for i in range(1, 3):
-            validator_store.add(Validator("v{}".format(i), float(i), ticker))
+        validator_set = ValidatorSet.with_random_weight(self.config.validator_num, ticker)
+        network = NetworkModel(validator_set, ticker)
 
         # genesis message
-        genesis = Message.genesis(validator_store.choice()[0])
-        for v in validator_store.all():
-            v.state_transition(genesis)
-            self.message_store.add(genesis)
+        genesis = Message.genesis(validator_set.choice_one())
+        genesis.sender.add_message(genesis)
+        network.broadcast(genesis, genesis.sender)
+        for receiver in validator_set.all():
+            packets = network.receive(receiver)
+            for packet in packets:
+                receiver.add_message(packet.message)
         ticker.tick()
 
-        sender, receiver = validator_store.choice(2)
-        for i in range(100):
-            self.create_and_send_message(sender, receiver)
-            sender, receiver = receiver, sender
+        for i in range(10):
+            sender = validator_set.choice_one()
+            message = sender.create_message()
+            sender.add_message(message)
+            network.broadcast(message, sender)
+            for receiver in validator_set.all():
+                packets = network.receive(receiver)
+                for packet in packets:
+                    receiver.add_message(packet.message)
             ticker.tick()
 
-        return validator_store
-
-    def create_and_send_message(self, sender: Validator, receiver: Validator):
-        message = sender.create_message()
-        sender.state_transition(message)
-        self.message_store.add(message)
-        receiver.state_transition(message)
+        return validator_set

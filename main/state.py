@@ -1,10 +1,10 @@
 from main.justification import Justification
 from main.message import Message
 from main.block import Block
-from main.store.message_store import MessageStore
+from main.store import Store
 from main.message_validator import MessageValidator
 from main.safety_oracle.clique_oracle import CliqueOracle
-from main.ticker import Ticker
+from main.util.ticker import Ticker
 from main.error import StateTransitionError
 from typing import Optional
 from result import Ok, Err, Result
@@ -13,7 +13,7 @@ from result import Ok, Err, Result
 class State:
     def __init__(self, ticker: Optional[Ticker]):
         self.last_finalized_block: Optional[Block] = None
-        self.message_store: MessageStore = MessageStore()
+        self.store: Store = Store()
         if ticker is None:
             self.ticker = Ticker()
         else:
@@ -42,15 +42,15 @@ class State:
 
     def finalize_message(self, message: Message) -> Result[StateTransitionError, bool]:
         self.last_finalized_block = message.estimate
-        self.message_store.add(message)
+        self.store.add(message)
         return Ok(True)
 
     def justification(self) -> Justification:
-        return Justification(self.message_store.latest_messages())
+        return Justification(self.store.latest_messages())
 
     def dump(self):
         return {
-            "messages": self.message_store.dump(self)
+            "messages": self.store.dump(self)
         }
 
     def tick(self):

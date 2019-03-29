@@ -1,7 +1,9 @@
+from __future__ import annotations
 from main.state import State
 from main.message import Message
 from main.estimator.lmd_ghost_estimator import LMDGhostEstimator as Estimator
-from main.ticker import Ticker
+from main.util.ticker import Ticker
+import random as r
 
 
 class Validator:
@@ -14,6 +16,8 @@ class Validator:
         self.name: str = name
         self.weight: float = initial_weight
         self.state = State(ticker)
+        # TODO: implement
+        self.hash: int = r.randint(1, 100000000000000)
 
     def create_message(self) -> Message:
         sender = self
@@ -27,7 +31,7 @@ class Validator:
         )
         return message
 
-    def state_transition(self, message: Message):
+    def add_message(self, message: Message):
         self.state.transition(message)
 
     def tick(self):
@@ -39,3 +43,10 @@ class Validator:
             "state": self.state.dump(),
             "current_slot": self.state.ticker.current()
         }
+
+    def __eq__(self, other: Validator):
+        return self.hash == other.hash
+
+    def __hash__(self):
+        return self.hash
+
