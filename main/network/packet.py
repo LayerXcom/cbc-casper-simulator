@@ -1,11 +1,12 @@
 import dataclasses
-from main.message import Message
-from main.validator import Validator
+from typing import Generic, TypeVar
+T = TypeVar('T')
+U = TypeVar('U')
 
 
 @dataclasses.dataclass
-class Packet:
-    message: Message
-    sender: Validator
-    receiver: Validator
+class Packet(Generic[T, U]):
+    message: T
+    sender: U
+    receiver: U
     slot: int

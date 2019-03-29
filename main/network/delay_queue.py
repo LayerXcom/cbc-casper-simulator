@@ -1,5 +1,4 @@
 from typing import List, Generic, Optional, TypeVar
-from main.network.packet import Packet
 T = TypeVar('T')
 
 
@@ -10,7 +9,7 @@ class DelayQueue(Generic[T]):
     def put(self, item: T, current_slot: int = 0):
         self.queue.append((item, current_slot))
 
-    def get(self, current_slot: int = 0, delay: int = 0) -> Optional[Packet]:
+    def get(self, current_slot: int = 0, delay: int = 0) -> Optional[T]:
         for index, item in enumerate(reversed(self.queue)):
             if item[1] <= current_slot - delay:
                 del self.queue[len(self.queue) - index - 1]

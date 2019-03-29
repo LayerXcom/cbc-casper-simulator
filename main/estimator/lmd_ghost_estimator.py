@@ -35,3 +35,4 @@ class LMDGhostEstimator:
                 scores[current_block] = scores.get(current_block, 0) + weights[v]
                 current_block = chain.get_parent(current_block)
         return scores
+
