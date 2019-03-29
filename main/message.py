@@ -1,6 +1,7 @@
 from __future__ import annotations
 import random as r
 from typing import TYPE_CHECKING
+from typing import Optional
 from main.block import Block
 from main.justification import Justification
 if TYPE_CHECKING:

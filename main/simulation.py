@@ -26,7 +26,8 @@ class Simulation:
 
     def start(self):
         ticker = Ticker()
-        validator_set = ValidatorSet.with_random_weight(self.config.validator_num, ticker)
+        validator_set = ValidatorSet.with_random_weight(
+            self.config.validator_num, ticker)
         network = NetworkModel(validator_set, ticker)
 
         # genesis message

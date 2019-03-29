@@ -8,7 +8,7 @@ class Block:
         self,
         parent_hash: Optional[int] = None,
     ):
-        self.parent_hash: int = parent_hash
+        self.parent_hash: Optional[int] = parent_hash
         # TODO: random_number is appropriate?
         self.hash: int = r.randint(1, 100000000000000)
 

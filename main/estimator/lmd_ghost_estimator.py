@@ -21,8 +21,8 @@ class LMDGhostEstimator:
         return Block(best_block.hash)
 
     @classmethod
-    def verify(cls, state: State, block: Block) -> bool:
-        return cls.estimate(state) == block
+    def verify(cls, state: State, block: Block, justification: Justification) -> bool:
+        return cls.estimate(state, justification) == block
 
     @classmethod
     def score(cls, state: State, justification: Justification) -> Dict[Block, float]:

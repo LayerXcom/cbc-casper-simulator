@@ -18,11 +18,9 @@ class Store:
 
     def add(self, message):
         self.block_to_message_in_hash[message.estimate.hash] = message.hash
+        self.messages[message.hash] = message
 
-        if message.hash not in self.messages:
-            self.messages[message.hash] = message
-        if message.sender not in self.message_history:
-            self.message_history[message.sender] = []
+        self.message_history.setdefault(message.sender, [])
         self.message_history[message.sender].append(message.hash)
 
         if message.is_genesis():
@@ -30,21 +28,14 @@ class Store:
         else:
             parent_message_hash = self.block_to_message_in_hash[message.estimate.parent_hash]
             self.parent[message.hash] = parent_message_hash
-            if parent_message_hash not in self.children:
-                self.children[parent_message_hash] = []
+            self.children.setdefault(parent_message_hash, [])
             self.children[parent_message_hash].append(message.hash)
 
     def get(self, message_hash: int) -> Optional[Message]:
-        if message_hash not in self.messages:
-            return None
-        else:
-            return self.messages[message_hash]
+        return self.messages.get(message_hash, None)
 
     def get_parent(self, message_hash: int) -> Optional[Message]:
-        if message_hash not in self.parent:
-            return None
-        else:
-            return self.parent[message_hash]
+        return self.parent.get(message_hash, None)
 
     def latest_messages(self) -> Dict['Validator', int]:
         return {v: l[-1] for (v, l) in self.message_history.items()}
@@ -65,8 +56,7 @@ class BlockStore:
             parent = message_store.messages[parent_hash].estimate
             for child_hash in children_hashes:
                 child = message_store.messages[child_hash].estimate
-                if parent not in self.children:
-                    self.children[parent] = []
+                self.children.setdefault(parent, [])
                 self.children[parent].append(child)
                 self.parent[child] = parent
 
@@ -74,13 +64,7 @@ class BlockStore:
         return len(self.get_children(block)) != 0
 
     def get_children(self, block: Block) -> List[Block]:
-        if block not in self.children:
-            return []
-        else:
-            return self.children[block]
+        return self.children.get(block, [])
 
     def get_parent(self, block: Block) -> Optional[Block]:
-        if block.is_genesis():
-            return None
-        else:
-            return self.parent[block]
+        return self.parent.get(block, None)

@@ -49,4 +49,3 @@ class Validator:
 
     def __hash__(self):
         return self.hash
-
