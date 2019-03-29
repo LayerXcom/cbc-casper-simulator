@@ -21,6 +21,7 @@ class Message:
         self.estimate: Block = estimate
         self.justification: Justification = justification
         self.sender_slot: int = sender_slot
+        self.receiver_slot: int = -1
         # TODO: implement
         self.hash: int = r.randint(1, 100000000000000)
 
@@ -40,7 +41,8 @@ class Message:
             "sender": self.sender.name,
             "estimate": self.estimate.dump(),
             "justification": self.justification.dump(state),
-            "slot": self.sender_slot,
+            "sender_slot": self.sender_slot,
+            "receiver_slot": self.receiver_slot,
             "hash": self.hash,
             "parent_hash": parent_hash
         }

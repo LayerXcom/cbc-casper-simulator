@@ -18,9 +18,10 @@ class Visualizer:
         for message in messages:
             h = str(message["hash"])
             sender = message["sender"]
-            slot = str(message["slot"])
-            label = "message id: {}\n sender: {}\n slot: {} ".format(
-                h, sender, slot)
+            sender_slot = str(message["sender_slot"])
+            receiver_slot = str(message["receiver_slot"])
+            label = "Message\n id: {}\n sender: {}\n sender_slot: {}\n receiver_slot: {} ".format(
+                h, sender, sender_slot, receiver_slot)
             G.node(h, label)
 
         # parent-child

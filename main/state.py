@@ -41,6 +41,7 @@ class State:
         return Ok(True)
 
     def finalize_message(self, message: Message) -> Result[StateTransitionError, bool]:
+        message.receiver_slot = self.ticker.current()
         self.last_finalized_block = message.estimate
         self.store.add(message)
         return Ok(True)
