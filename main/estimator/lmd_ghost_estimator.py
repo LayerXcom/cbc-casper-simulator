@@ -12,12 +12,12 @@ if TYPE_CHECKING:
 class LMDGhostEstimator:
     @classmethod
     def estimate(cls, state: State, justification: Justification) -> Block:
-        chain: Store = state.store.block_chain()
         scores: Dict[Block, float] = cls.score(state, justification)
+        store = state.store
 
-        best_block = state.last_finalized_block
-        while chain.has_children(best_block):
-            best_block = max(chain.get_children(best_block), key=lambda x: scores[x])
+        best_block = store.last_finalized_block
+        while store.has_children_blocks(best_block):
+            best_block = max(store.children_blocks(best_block), key=lambda x: scores[x])
         return Block(best_block.hash)
 
     @classmethod
@@ -28,11 +28,11 @@ class LMDGhostEstimator:
     def score(cls, state: State, justification: Justification) -> Dict[Block, float]:
         weights: Dict[Validator, float] = Weight.weights(state)
         scores: Dict[Block, float] = dict()
-        chain: Store = state.store.block_chain()
+        store = state.store
         for v, m in justification.latest_messages.items():
-            current_block = state.store.get(m).estimate
+            current_block = store.to_block(m)
             while not current_block.is_genesis():
                 scores[current_block] = scores.get(current_block, 0) + weights[v]
-                current_block = chain.get_parent(current_block)
+                current_block = store.parent_block(current_block)
         return scores
 

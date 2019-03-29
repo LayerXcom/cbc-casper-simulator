@@ -23,6 +23,7 @@ class Validator:
         sender = self
         justification = self.state.justification()
         estimate = Estimator.estimate(self.state, justification)
+        print(Estimator.score(self.state, justification))
         message = Message(
             sender,
             estimate,

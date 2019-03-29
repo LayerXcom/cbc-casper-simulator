@@ -12,7 +12,6 @@ from result import Ok, Err, Result
 
 class State:
     def __init__(self, ticker: Optional[Ticker]):
-        self.last_finalized_block: Optional[Block] = None
         self.store: Store = Store()
         if ticker is None:
             self.ticker = Ticker()
@@ -42,7 +41,6 @@ class State:
 
     def finalize_message(self, message: Message) -> Result[StateTransitionError, bool]:
         message.receiver_slot = self.ticker.current()
-        self.last_finalized_block = message.estimate
         self.store.add(message)
         return Ok(True)
 

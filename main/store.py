@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 from main.message import Message
 from main.block import Block
 from typing import TYPE_CHECKING
+from typing import Union
 if TYPE_CHECKING:
     from main.validator import Validator
 
@@ -15,6 +16,7 @@ class Store:
         self.parent: Dict[int, int] = dict()
         self.block_to_message_in_hash: Dict[int, int] = dict()
         self.genesis: Optional[Message] = None
+        self.last_finalized_block: Optional[Block] = None
 
     def add(self, message):
         self.block_to_message_in_hash[message.estimate.hash] = message.hash
@@ -31,40 +33,48 @@ class Store:
             self.children.setdefault(parent_message_hash, [])
             self.children[parent_message_hash].append(message.hash)
 
-    def get(self, message_hash: int) -> Optional[Message]:
-        return self.messages.get(message_hash, None)
+        self.last_finalized_block = message.estimate
 
-    def get_parent(self, message_hash: int) -> Optional[Message]:
-        return self.parent.get(message_hash, None)
+    def message(self, hash: int) -> Optional[Message]:
+        return self.messages.get(hash, None)
 
     def latest_messages(self) -> Dict['Validator', int]:
         return {v: l[-1] for (v, l) in self.message_history.items()}
 
-    def block_chain(self) -> BlockStore:
-        return BlockStore(self)
+    def parent_message(self, hash_or_message: Union[int, Message]) -> Optional[Message]:
+        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        parent_hash = self.parent.get(message.hash, None)
+        return self.messages.get(parent_hash, None)
+
+    def children_messages(self, hash_or_message: Union[int, Message]) -> List[Message]:
+        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        children_hash = self.children.get(message.hash, [])
+        return [self.messages[child] for child in children_hash]
+
+    def parent_block(self, hash_or_block: Union[int, Block]) -> Optional[Block]:
+        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        message_hash = self.block_to_message_in_hash.get(block_hash, None)
+        parent_message_hash = self.parent.get(message_hash, None)
+        message = self.messages.get(parent_message_hash, None)
+        return message.estimate if message is not None else None
+
+    def children_blocks(self, hash_or_block: Union[int, Block]) -> List[Block]:
+        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        message_hash = self.block_to_message_in_hash.get(block_hash, None)
+        children_message_hashes = self.children.get(message_hash, [])
+        return [self.messages[child].estimate for child in children_message_hashes]
+
+    def has_children_blocks(self, hash_or_block: Union[int, Block]) -> bool:
+        return len(self.children_blocks(hash_or_block)) > 0
+
+    def to_message(self, hash_or_block: Union[int, Block]) -> Optional[Message]:
+        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        message_hash = self.block_to_message_in_hash.get(block_hash, None)
+        return self.messages.get(message_hash, None)
+
+    def to_block(self, hash_or_message: Union[int, Message]) -> Optional[Block]:
+        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        return message.estimate
 
     def dump(self, state=None):
-        return [m.dump(state, self.get(self.get_parent(m.hash))) for m in self.messages.values()]
-
-
-class BlockStore:
-    def __init__(self, message_store: Store):
-        self.genesis: Block = message_store.genesis.estimate
-        self.children: Dict[Block, List[Block]] = dict()
-        self.parent: Dict[Block, Block] = dict()
-        for (parent_hash, children_hashes) in message_store.children.items():
-            parent = message_store.messages[parent_hash].estimate
-            for child_hash in children_hashes:
-                child = message_store.messages[child_hash].estimate
-                self.children.setdefault(parent, [])
-                self.children[parent].append(child)
-                self.parent[child] = parent
-
-    def has_children(self, block: Block) -> bool:
-        return len(self.get_children(block)) != 0
-
-    def get_children(self, block: Block) -> List[Block]:
-        return self.children.get(block, [])
-
-    def get_parent(self, block: Block) -> Optional[Block]:
-        return self.parent.get(block, None)
+        return [m.dump(state, self.parent_message(m.hash)) for m in self.messages.values()]
