@@ -42,24 +42,28 @@ class Store:
         return {v: l[-1] for (v, l) in self.message_history.items()}
 
     def parent_message(self, hash_or_message: Union[int, Message]) -> Optional[Message]:
-        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        message = self.messages[hash_or_message] if isinstance(
+            hash_or_message, int) else hash_or_message
         parent_hash = self.parent.get(message.hash, None)
         return self.messages.get(parent_hash, None)
 
     def children_messages(self, hash_or_message: Union[int, Message]) -> List[Message]:
-        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        message = self.messages[hash_or_message] if isinstance(
+            hash_or_message, int) else hash_or_message
         children_hash = self.children.get(message.hash, [])
         return [self.messages[child] for child in children_hash]
 
     def parent_block(self, hash_or_block: Union[int, Block]) -> Optional[Block]:
-        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        block_hash = hash_or_block if isinstance(
+            hash_or_block, int) else hash_or_block.hash
         message_hash = self.block_to_message_in_hash.get(block_hash, None)
         parent_message_hash = self.parent.get(message_hash, None)
         message = self.messages.get(parent_message_hash, None)
         return message.estimate if message is not None else None
 
     def children_blocks(self, hash_or_block: Union[int, Block]) -> List[Block]:
-        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        block_hash = hash_or_block if isinstance(
+            hash_or_block, int) else hash_or_block.hash
         message_hash = self.block_to_message_in_hash.get(block_hash, None)
         children_message_hashes = self.children.get(message_hash, [])
         return [self.messages[child].estimate for child in children_message_hashes]
@@ -68,12 +72,14 @@ class Store:
         return len(self.children_blocks(hash_or_block)) > 0
 
     def to_message(self, hash_or_block: Union[int, Block]) -> Optional[Message]:
-        block_hash = hash_or_block if isinstance(hash_or_block, int) else hash_or_block.hash
+        block_hash = hash_or_block if isinstance(
+            hash_or_block, int) else hash_or_block.hash
         message_hash = self.block_to_message_in_hash.get(block_hash, None)
         return self.messages.get(message_hash, None)
 
     def to_block(self, hash_or_message: Union[int, Message]) -> Optional[Block]:
-        message = self.messages[hash_or_message] if isinstance(hash_or_message, int) else hash_or_message
+        message = self.messages[hash_or_message] if isinstance(
+            hash_or_message, int) else hash_or_message
         return message.estimate
 
     def dump(self, state=None):
