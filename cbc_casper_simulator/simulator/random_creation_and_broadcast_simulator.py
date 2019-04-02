@@ -4,20 +4,7 @@ from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.validator_set import ValidatorSet
 from cbc_casper_simulator.network.model import Model as NetworkModel
 from cbc_casper_simulator.util.ticker import Ticker
-
-
-class SimulatorConfig:
-    def __init__(
-        self,
-        validator_num: int,
-        max_slot: int = 100
-    ):
-        self.validator_num = validator_num
-        self.max_slot = max_slot
-
-    @classmethod
-    def default(cls) -> SimulatorConfig:
-        return SimulatorConfig(3)
+from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
 
 
 class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
