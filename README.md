@@ -40,3 +40,9 @@ python main.py
 ```
 
 The result of simulation will be generated in `output` directory by default.
+
+### Run tests
+
+```
+pytest
+```
