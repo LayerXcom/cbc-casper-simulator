@@ -4,17 +4,17 @@ from graphviz import Digraph
 
 class Visualizer:
     @classmethod
-    def block_store(cls, input, output):
-        yaml = cls.yml_to_obj(input)
+    def block_store(cls, validator, output):
+        #obj = cls.yml_to_obj(source) if isinstance(source, str) else source
 
-        name = yaml["name"]
-        slot = yaml["current_slot"]
+        name = validator["name"]
+        slot = validator["current_slot"]
         label = "{}'s view in slot {}".format(name, slot)
         G = Digraph(format='png')
         G.attr(label=label)
         G.attr(fontsize='30')
 
-        messages = yaml["state"]["messages"]
+        messages = validator["state"]["messages"]
         for message in messages:
             h = str(message["hash"])
             sender = message["sender"]
