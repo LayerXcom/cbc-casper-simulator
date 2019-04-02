@@ -36,3 +36,9 @@ class Model:
         for receiver in self.validator_set.all():
             if sender != receiver:
                 self.send(message, sender, receiver)
+
+    def dump(self):
+        return {
+            "validators": self.validator_set.dump(),
+            "slot": self.ticker.current()
+        }

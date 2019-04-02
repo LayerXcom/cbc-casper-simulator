@@ -24,6 +24,9 @@ class ValidatorSet:
     def all(self) -> List[Validator]:
         return self.validators
 
+    def dump(self):
+        return [validator.dump() for validator in self.all()]
+
     @classmethod
     def with_random_weight(cls, num, ticker) -> ValidatorSet:
         validators: List[Validator] = []

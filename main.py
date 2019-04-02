@@ -3,17 +3,17 @@ from cbc_casper_simulator.simulator.random_creation_and_broadcast_simulator impo
 from cbc_casper_simulator.visualizer import Visualizer
 import yaml
 
-yaml_file = "./output/validator.yaml"
-graph_file = "output/validator"
+yaml_file = "./output/output.yaml"
 
 simulator = RandomCreationAndBroadcastSimulator(SimulatorConfig.default())
 network_states = list(simulator)
-
-result = yaml.dump(network_states[-1].validator_set.all()[0].dump())
+network_state = network_states[-1].dump()
 
 with open(yaml_file, 'w') as file:
-    file.write(result)
+    file.write(yaml.dump(network_state))
 
-Visualizer.block_store(yaml_file, graph_file)
+for validator in network_state["validators"]:
+    graph_file = "output/{}".format(validator['name'])
+    Visualizer.block_store(validator, graph_file)
 
 print("done!")
