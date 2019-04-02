@@ -28,7 +28,8 @@ class Model:
         self.queue.setdefault(receiver, DelayQueue())
         delay = Delay.get(1, 9)
         while not self.queue[receiver].empty(self.ticker.current(), delay):
-            packets.append(self.queue[receiver].get(self.ticker.current(), delay))
+            packets.append(self.queue[receiver].get(
+                self.ticker.current(), delay))
         return packets
 
     def broadcast(self, message: Message, sender: Validator):
