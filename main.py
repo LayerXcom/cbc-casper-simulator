@@ -1,4 +1,5 @@
-from cbc_casper_simulator.simulator import SimulatorConfig, RandomCreationAndBroadcastSimulator
+from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
+from cbc_casper_simulator.simulator.random_creation_and_broadcast_simulator import RandomCreationAndBroadcastSimulator
 from cbc_casper_simulator.visualizer import Visualizer
 import yaml
 
