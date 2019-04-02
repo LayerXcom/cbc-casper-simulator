@@ -13,3 +13,5 @@ with open(yaml_file, 'w') as file:
     file.write(result)
 
 Visualizer.block_store(yaml_file, graph_file)
+
+print("done!")
