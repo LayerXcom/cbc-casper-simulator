@@ -82,5 +82,10 @@ class Store:
             hash_or_message, int) else hash_or_message
         return message.estimate
 
+    def justified(self, hash_or_message: Union[int, Message]) -> bool:
+        message_hash = hash_or_message if isinstance(
+            hash_or_message, int) else hash_or_message.hash
+        return message_hash in self.messages
+
     def dump(self, state=None):
         return [m.dump(state, self.parent_message(m.hash)) for m in self.messages.values()]

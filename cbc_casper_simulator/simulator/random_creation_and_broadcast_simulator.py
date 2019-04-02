@@ -36,7 +36,8 @@ class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
         validator_set = self.network.validator_set
         genesis = Message.genesis(validator_set.choice_one())
         for validator in validator_set.all():
-            validator.add_message(genesis)
+            res = validator.add_message(genesis)
+            assert res.is_ok(), res.value
         return self.network
 
     def step_n(self) -> NetworkModel:
@@ -45,12 +46,15 @@ class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
             # The validator randomly selected create and broadcast a message to other validators
             sender = validator_set.choice_one()
             message = sender.create_message()
-            sender.add_message(message)
+            res = sender.add_message(message)
+            assert res.is_ok(), res.value
             self.network.broadcast(message, sender)
 
         # Validators receive queued messages in every slot
         for receiver in validator_set.all():
             packets = self.network.receive(receiver)
             for packet in packets:
-                receiver.add_message(packet.message)
+                res = receiver.add_message(packet.message)
+                assert res.is_ok(), res.value
+
         return self.network

@@ -3,7 +3,9 @@ from cbc_casper_simulator.state import State
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator as Estimator
 from cbc_casper_simulator.util.ticker import Ticker
+from cbc_casper_simulator.error import *
 import random as r
+from result import Ok, Err, Result
 
 
 class Validator:
@@ -31,8 +33,8 @@ class Validator:
         )
         return message
 
-    def add_message(self, message: Message):
-        self.state.transition(message)
+    def add_message(self, message: Message) -> Result[Error, bool]:
+        return self.state.transition(message)
 
     def tick(self):
         self.state.tick()

@@ -17,7 +17,8 @@ class LMDGhostEstimator:
 
         best_block = store.last_finalized_block
         while store.has_children_blocks(best_block):
-            best_block = max(store.children_blocks(best_block), key=lambda x: scores[x])
+            best_block = max(store.children_blocks(
+                best_block), key=lambda x: scores[x])
         return Block(best_block.hash)
 
     @classmethod
@@ -32,7 +33,7 @@ class LMDGhostEstimator:
         for v, m in justification.latest_messages.items():
             current_block = store.to_block(m)
             while not current_block.is_genesis():
-                scores[current_block] = scores.get(current_block, 0) + weights[v]
+                scores[current_block] = scores.get(
+                    current_block, 0) + weights[v]
                 current_block = store.parent_block(current_block)
         return scores
-
