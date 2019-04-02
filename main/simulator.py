@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Iterable
 from main.message import Message
 from main.validator_set import ValidatorSet
 from main.network.model import Model as NetworkModel
@@ -8,47 +10,60 @@ class SimulatorConfig:
     def __init__(
         self,
         validator_num: int,
-        network_latency: float = 0
+        max_slot: int = 100
     ):
         self.validator_num = validator_num
-        self.network_latency = network_latency
+        self.max_slot = max_slot
+
+    @classmethod
+    def default(cls) -> SimulatorConfig:
+        return SimulatorConfig(3)
 
 
-class Simulator:
-    def __init__(
-            self,
-            config: SimulatorConfig = None
-    ):
-        if config is None:
-            self.config = SimulatorConfig(3)
-        else:
-            self.config = config
-
-    def start(self):
-        ticker = Ticker()
+class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
+    def __init__(self,
+                 config: SimulatorConfig
+                 ):
+        self.config = config
+        self.ticker = Ticker()
         validator_set = ValidatorSet.with_random_weight(
-            self.config.validator_num, ticker)
-        network = NetworkModel(validator_set, ticker)
+            config.validator_num, self.ticker)
+        self.network = NetworkModel(validator_set, self.ticker)
 
-        # genesis message
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> NetworkModel:
+        i = self.ticker.current()
+        if i == 0:
+            current = self.step_0()
+        elif i > self.config.max_slot:
+            raise StopIteration
+        else:
+            current = self.step_n()
+        self.ticker.tick()
+        return current
+
+    def step_0(self) -> NetworkModel:
+        # Add genesis message to all validators
+        validator_set = self.network.validator_set
         genesis = Message.genesis(validator_set.choice_one())
         for validator in validator_set.all():
             validator.add_message(genesis)
-        ticker.tick()
+        return self.network
 
-        for i in range(100):
-            if i % 10 == 0:
-                sender = validator_set.choice_one()
-                message = sender.create_message()
-                sender.add_message(message)
-                network.broadcast(message, sender)
+    def step_n(self) -> NetworkModel:
+        validator_set = self.network.validator_set
+        if self.ticker.current() % 10 == 0:
+            # The validator randomly selected create and broadcast a message to other validators
+            sender = validator_set.choice_one()
+            message = sender.create_message()
+            sender.add_message(message)
+            self.network.broadcast(message, sender)
 
-            self.all_receive(network, validator_set)
-            ticker.tick()
-        return validator_set
-
-    def all_receive(self, network: NetworkModel, validator_set: ValidatorSet):
+        # Validators receive queued messages in every slot
         for receiver in validator_set.all():
-            packets = network.receive(receiver)
+            packets = self.network.receive(receiver)
             for packet in packets:
                 receiver.add_message(packet.message)
+        return self.network
