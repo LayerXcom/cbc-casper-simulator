@@ -1,6 +1,10 @@
-# CBC Simulator
+# CBC Casper Simulator
 
-Under Construction!!
+CBC Casper simulator & visualizer
+
+### Requirements
+* Python 3.7.2 or later
+* Graphviz
 
 ### Getting started
 
