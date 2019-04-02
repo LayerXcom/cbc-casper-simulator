@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import Iterable
-from main.message import Message
-from main.validator_set import ValidatorSet
-from main.network.model import Model as NetworkModel
-from main.util.ticker import Ticker
+from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.validator_set import ValidatorSet
+from cbc_casper_simulator.network.model import Model as NetworkModel
+from cbc_casper_simulator.util.ticker import Ticker
 
 
 class SimulatorConfig:

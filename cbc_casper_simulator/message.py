@@ -1,11 +1,11 @@
 from __future__ import annotations
 import random as r
 from typing import TYPE_CHECKING
-from main.block import Block
-from main.justification import Justification
+from cbc_casper_simulator.block import Block
+from cbc_casper_simulator.justification import Justification
 if TYPE_CHECKING:
-    from main.validator import Validator
-    from main.state import State
+    from cbc_casper_simulator.validator import Validator
+    from cbc_casper_simulator.state import State
 
 
 class Message:

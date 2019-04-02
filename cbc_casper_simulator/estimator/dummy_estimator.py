@@ -1,6 +1,6 @@
-from main.block import Block
-from main.state import State
-from main.justification import Justification
+from cbc_casper_simulator.block import Block
+from cbc_casper_simulator.state import State
+from cbc_casper_simulator.justification import Justification
 
 
 class DummyEstimator:

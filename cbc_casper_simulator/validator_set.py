@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List
-from main.validator import Validator
+from cbc_casper_simulator.validator import Validator
 import random as r
 
 

@@ -1,11 +1,11 @@
-from main.justification import Justification
-from main.message import Message
-from main.block import Block
-from main.store import Store
-from main.message_validator import MessageValidator
-from main.safety_oracle.clique_oracle import CliqueOracle
-from main.util.ticker import Ticker
-from main.error import StateTransitionError
+from cbc_casper_simulator.justification import Justification
+from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.block import Block
+from cbc_casper_simulator.store import Store
+from cbc_casper_simulator.message_validator import MessageValidator
+from cbc_casper_simulator.safety_oracle.clique_oracle import CliqueOracle
+from cbc_casper_simulator.util.ticker import Ticker
+from cbc_casper_simulator.error import StateTransitionError
 from typing import Optional
 from result import Ok, Err, Result
 

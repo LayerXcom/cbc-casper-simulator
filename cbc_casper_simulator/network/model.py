@@ -1,10 +1,10 @@
-from main.validator_set import ValidatorSet
-from main.validator import Validator
-from main.message import Message
-from main.util.ticker import Ticker
-from main.network.packet import Packet
-from main.network.delay_queue import DelayQueue
-from main.network.delay import RandomDelay as Delay
+from cbc_casper_simulator.validator_set import ValidatorSet
+from cbc_casper_simulator.validator import Validator
+from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.util.ticker import Ticker
+from cbc_casper_simulator.network.packet import Packet
+from cbc_casper_simulator.network.delay_queue import DelayQueue
+from cbc_casper_simulator.network.delay import RandomDelay as Delay
 from typing import Dict, List
 
 
