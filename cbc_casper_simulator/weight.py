@@ -1,9 +1,9 @@
 from typing import Dict
 from typing import TYPE_CHECKING
-from main.state import State
+from cbc_casper_simulator.state import State
 import random as r
 if TYPE_CHECKING:
-    from main.validator import Validator
+    from cbc_casper_simulator.validator import Validator
 
 
 class Weight:

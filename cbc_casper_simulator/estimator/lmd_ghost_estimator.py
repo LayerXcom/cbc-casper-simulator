@@ -1,12 +1,12 @@
-from main.block import Block
-from main.state import State
-from main.justification import Justification
-from main.weight import Weight
-from main.store import Store
+from cbc_casper_simulator.block import Block
+from cbc_casper_simulator.state import State
+from cbc_casper_simulator.justification import Justification
+from cbc_casper_simulator.weight import Weight
+from cbc_casper_simulator.store import Store
 from typing import Dict
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from main.validator import Validator
+    from cbc_casper_simulator.validator import Validator
 
 
 class LMDGhostEstimator:

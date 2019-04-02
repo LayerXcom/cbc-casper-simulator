@@ -1,11 +1,11 @@
 from __future__ import annotations
 from typing import Dict, List, Optional
-from main.message import Message
-from main.block import Block
+from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.block import Block
 from typing import TYPE_CHECKING
 from typing import Union
 if TYPE_CHECKING:
-    from main.validator import Validator
+    from cbc_casper_simulator.validator import Validator
 
 
 class Store:

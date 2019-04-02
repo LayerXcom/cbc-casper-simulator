@@ -1,5 +1,5 @@
-from main.simulator import SimulatorConfig, RandomCreationAndBroadcastSimulator
-from main.visualizer import Visualizer
+from cbc_casper_simulator.simulator import SimulatorConfig, RandomCreationAndBroadcastSimulator
+from cbc_casper_simulator.visualizer import Visualizer
 import yaml
 
 yaml_file = "./output/validator.yaml"

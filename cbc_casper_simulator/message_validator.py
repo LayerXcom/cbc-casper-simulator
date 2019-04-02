@@ -1,5 +1,5 @@
 from result import Ok, Err, Result
-from main.error import MessageValidationError
+from cbc_casper_simulator.error import MessageValidationError
 
 
 class MessageValidator:
