@@ -3,7 +3,7 @@ from cbc_casper_simulator.validator import Validator
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.util.ticker import Ticker
 from cbc_casper_simulator.network.packet import Packet
-from cbc_casper_simulator.network.delay_queue import DelayQueue
+from cbc_casper_simulator.util.delay_queue import DelayQueue
 from cbc_casper_simulator.network.delay import RandomDelay as Delay
 from typing import Dict, List
 
