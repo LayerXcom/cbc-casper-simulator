@@ -42,7 +42,7 @@ class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
 
     def step_n(self) -> NetworkModel:
         validator_set = self.network.validator_set
-        if self.ticker.current() % 10 == 0:
+        if self.ticker.current() % 2 == 0:
             # The validator randomly selected create and broadcast a message to other validators
             sender = validator_set.choice_one()
             message = sender.create_message()

@@ -26,7 +26,7 @@ class Model:
     def receive(self, receiver: Validator) -> List[Packet]:
         packets = []
         self.queue.setdefault(receiver, DelayQueue())
-        delay = Delay.get(1, 9)
+        delay = Delay.get(1, 2)
         while not self.queue[receiver].empty(self.ticker.current(), delay):
             packets.append(self.queue[receiver].get(
                 self.ticker.current(), delay))
