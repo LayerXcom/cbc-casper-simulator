@@ -23,24 +23,15 @@ class RandomCreationAndBroadcastSimulator(Iterable[NetworkModel]):
     def __next__(self) -> NetworkModel:
         i = self.ticker.current()
         if i == 0:
-            current = self.step_0()
+            current = self.network
         elif i > self.config.max_slot:
             raise StopIteration
         else:
-            current = self.step_n()
+            current = self.step()
         self.ticker.tick()
         return current
 
-    def step_0(self) -> NetworkModel:
-        # Add genesis message to all validators
-        validator_set = self.network.validator_set
-        genesis = Message.genesis(validator_set.choice_one())
-        for validator in validator_set.all():
-            res = validator.add_message(genesis)
-            assert res.is_ok(), res.value
-        return self.network
-
-    def step_n(self) -> NetworkModel:
+    def step(self) -> NetworkModel:
         validator_set = self.network.validator_set
         if self.ticker.current() % 2 == 0:
             # The validator randomly selected create and broadcast a message to other validators

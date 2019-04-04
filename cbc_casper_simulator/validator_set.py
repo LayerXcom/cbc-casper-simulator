@@ -1,18 +1,25 @@
 from __future__ import annotations
 from typing import List
 from cbc_casper_simulator.validator import Validator
+from cbc_casper_simulator.message import Message
 import random as r
 
 
 class ValidatorSet:
-    def __init__(self, validators: List[Validator] = None):
-        if validators is None:
-            self.validators = []
-        else:
-            self.validators = validators
+    def __init__(self, validators: List[Validator]):
+        assert len(validators) > 0, "At least one validator is required."
+        self.validators = validators
+        self.genesis = Message.genesis(r.choice(self.validators))
+
+        # Add genesis message to all validators
+        for validator in self.validators:
+            res = validator.add_message(self.genesis)
+            assert res.is_ok(), res.value
 
     def add(self, validator: Validator):
         self.validators.append(validator)
+        res = validator.add_message(self.genesis)
+        assert res.is_ok(), res.value
 
     def choice(self, num=1) -> List[Validator]:
         population = min(num, len(self.validators))
