@@ -10,7 +10,7 @@ from result import Ok, Err, Result
 
 
 class State:
-    def __init__(self, ticker: Optional[Ticker]):
+    def __init__(self, ticker: Optional[Ticker] = None):
         self.store: Store = Store()
         if ticker is None:
             self.ticker = Ticker()
