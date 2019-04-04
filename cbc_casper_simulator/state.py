@@ -46,7 +46,7 @@ class State:
         return Ok(True)
 
     def justification(self) -> Justification:
-        return Justification(self.store.latest_messages())
+        return Justification(self.store.latest_message_hashes())
 
     def dump(self):
         return {
