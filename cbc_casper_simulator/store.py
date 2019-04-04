@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.block import Block
+from cbc_casper_simulator.justification import Justification
 from typing import TYPE_CHECKING
 from typing import Union
 if TYPE_CHECKING:
@@ -38,8 +39,11 @@ class Store:
     def message(self, hash: int) -> Optional[Message]:
         return self.messages.get(hash, None)
 
-    def latest_messages(self) -> Dict['Validator', int]:
+    def latest_message_hashes(self) -> Dict['Validator', int]:
         return {v: l[-1] for (v, l) in self.message_history.items()}
+
+    def latest_messages(self) -> Dict['Validator', Message]:
+        return {v: self.to_message(l[-1]) for (v, l) in self.message_history.items()}
 
     def parent_message(self, hash_or_message: Union[int, Message]) -> Optional[Message]:
         message = self.messages[hash_or_message] if isinstance(

@@ -52,5 +52,12 @@ class LMDGhostEstimator:
             "estimate": estimate,
             "last_finalized_message": state.store.to_message(state.store.last_finalized_block).hash,
             "latest_messages": justification.dump(state),
+            "validators": [
+                {
+                    "name": v.name,
+                    "weight": v.weight
+                }
+                for v in justification.latest_messages.keys()
+            ],
             "state": dumped_state
         }
