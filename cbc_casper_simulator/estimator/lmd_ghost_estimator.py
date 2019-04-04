@@ -1,19 +1,15 @@
 from cbc_casper_simulator.block import Block
 from cbc_casper_simulator.state import State
 from cbc_casper_simulator.justification import Justification
-from cbc_casper_simulator.weight import Weight
 from cbc_casper_simulator.store import Store
 from typing import Dict
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from cbc_casper_simulator.validator import Validator
 
 
 class LMDGhostEstimator:
     @classmethod
     def estimate(cls, state: State, justification: Justification) -> Block:
         scores: Dict[Block, float] = cls.score(state, justification)
-        store = state.store
+        store: Store = state.store
 
         best_block = store.last_finalized_block
         while store.has_children_blocks(best_block):
@@ -27,13 +23,34 @@ class LMDGhostEstimator:
 
     @classmethod
     def score(cls, state: State, justification: Justification) -> Dict[Block, float]:
-        weights: Dict[Validator, float] = Weight.weights(state)
         scores: Dict[Block, float] = dict()
-        store = state.store
+        store: Store = state.store
         for v, m in justification.latest_messages.items():
             current_block = store.to_block(m)
             while not current_block.is_genesis():
                 scores[current_block] = scores.get(
-                    current_block, 0) + weights[v]
+                    current_block, 0) + v.weight
                 current_block = store.parent_block(current_block)
+            scores[store.genesis.estimate] = scores.get(
+                store.genesis.estimate, 0) + v.weight
         return scores
+
+    @classmethod
+    def dump(cls, state: State, justification: Justification):
+        scores: Dict[Block, float] = cls.score(state, justification)
+        # TODO: more excellent implementation
+        dumped_state = state.dump()
+        for block, score in scores.items():
+            for i, message in enumerate(dumped_state['messages']):
+                if message['estimate']['hash'] == block.hash:
+                    dumped_state['messages'][i]['score'] = score
+
+        estimate: Block = cls.estimate(state, justification).dump()
+        estimate['parent_message_hash'] = state.store.to_message(
+            estimate['parent_hash']).hash
+        return {
+            "estimate": estimate,
+            "last_finalized_message": state.store.to_message(state.store.last_finalized_block).hash,
+            "latest_messages": justification.dump(state),
+            "state": dumped_state
+        }
