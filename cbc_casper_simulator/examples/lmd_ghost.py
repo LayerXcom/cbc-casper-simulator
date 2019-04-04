@@ -1,5 +1,5 @@
 from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
-from cbc_casper_simulator.simulator.random_creation_and_broadcast_simulator import RandomCreationAndBroadcastSimulator
+from cbc_casper_simulator.simulator.broadcast_and_receive_simulator import BroadCastAndReceiveSimulator
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator
 import yaml
 from graphviz import Digraph
@@ -8,7 +8,7 @@ from graphviz import Digraph
 def simulate():
     yaml_file = "./output/lmd.yaml"
     validator_num = 10
-    simulator = RandomCreationAndBroadcastSimulator(
+    simulator = BroadCastAndReceiveSimulator(
         SimulatorConfig(validator_num))
 
     for i in range(30):
