@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/cbc-casper-simulator
+    docker:
+      - image: python:3.7.2
+    steps:
+      - checkout:
+          path: ~/cbc-casper-simulator
+      - run: ./test.sh

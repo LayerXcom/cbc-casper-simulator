@@ -4,7 +4,7 @@ import yaml
 from graphviz import Digraph
 
 
-def simulate():
+def simulate(render=True):
     yaml_file = "./output/output.yaml"
     simulator = BroadCastAndReceiveSimulator(SimulatorConfig.default())
     states = []
@@ -21,13 +21,13 @@ def simulate():
 
     for validator in states:
         graph_file = "output/s{}".format(validator['current_slot'])
-        visualize_validator_state(validator, graph_file)
+        visualize_validator_state(validator, graph_file, render)
         print("./{}.png was created.".format(graph_file))
 
     print("done!")
 
 
-def visualize_validator_state(validator, output):
+def visualize_validator_state(validator, output, render):
     name = validator["name"]
     slot = validator["current_slot"]
     label = "{}'s view in slot {}".format(name, slot)
@@ -60,4 +60,5 @@ def visualize_validator_state(validator, output):
             parent_hash = str(m["message_hash"])
             G.edge(child_hash, parent_hash, color='red')
 
-    G.render(output)
+    if render:
+        G.render(output)
