@@ -5,7 +5,7 @@ import yaml
 from graphviz import Digraph
 
 
-def simulate():
+def simulate(render=True):
     yaml_file = "./output/lmd.yaml"
     validator_num = 10
     simulator = BroadCastAndReceiveSimulator(
@@ -26,11 +26,11 @@ def simulate():
         print("{} was created".format(yaml_file))
 
     graph_file = './output/lmd'
-    visualize_block_score(result, graph_file)
+    visualize_block_score(result, graph_file, render)
     print("{}.png was created.".format(graph_file))
 
 
-def visualize_block_score(result, output):
+def visualize_block_score(result, output, render):
     G = Digraph(format='png')
     G.attr(label="score")
     G.attr(fontsize='30')
@@ -64,4 +64,5 @@ def visualize_block_score(result, output):
         if parent_hash is not None:
             G.edge(str(child_hash), str(parent_hash), color='blue')
 
-    G.render(output)
+    if render:
+        G.render(output)
