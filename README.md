@@ -39,7 +39,14 @@ pip install -r requirements.txt
 python main.py
 ```
 
-The result of simulation will be generated in `output` directory by default.
+This will generate `output.yml` by default.
+You can specify your simulation parameters file and output file via these options.
+
+```
+python main.py -i cbc_casper_simulator/examples/intput.yml -o output.yml
+```
+
+For more details, see `spec` directory.
 
 ### Run tests
 
