@@ -3,12 +3,12 @@ from typing import Iterator
 from cbc_casper_simulator.validator_set import ValidatorSet
 from cbc_casper_simulator.network.model import Model as NetworkModel
 from cbc_casper_simulator.util.ticker import Ticker
-from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
+from cbc_casper_simulator.simulator.config import Config
 
 
 class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
     def __init__(self,
-                 config: SimulatorConfig
+                 config: Config
                  ):
         self.config = config
         self.ticker = Ticker()

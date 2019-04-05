@@ -1,4 +1,4 @@
-from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
+from cbc_casper_simulator.simulator.config import Config
 from cbc_casper_simulator.simulator.broadcast_and_receive_simulator import BroadCastAndReceiveSimulator
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator
 import yaml
@@ -9,7 +9,7 @@ def simulate(render=True):
     yaml_file = "./output/lmd.yaml"
     validator_num = 10
     simulator = BroadCastAndReceiveSimulator(
-        SimulatorConfig(validator_num))
+        Config(validator_num))
 
     for i in range(30):
         next(simulator)

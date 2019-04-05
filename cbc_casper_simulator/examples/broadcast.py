@@ -1,4 +1,4 @@
-from cbc_casper_simulator.simulator.simulator_config import SimulatorConfig
+from cbc_casper_simulator.simulator.config import Config
 from cbc_casper_simulator.simulator.broadcast_and_receive_simulator import BroadCastAndReceiveSimulator
 import yaml
 from graphviz import Digraph
@@ -6,7 +6,7 @@ from graphviz import Digraph
 
 def simulate(render=True):
     yaml_file = "./output/output.yaml"
-    simulator = BroadCastAndReceiveSimulator(SimulatorConfig.default())
+    simulator = BroadCastAndReceiveSimulator(Config.default())
     states = []
     max_slot = 15
 
