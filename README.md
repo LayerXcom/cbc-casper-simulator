@@ -1,5 +1,7 @@
 # CBC Casper Simulator
 
+[![CircleCI](https://circleci.com/gh/LayerXcom/cbc-casper-simulator.svg?style=svg)](https://circleci.com/gh/LayerXcom/cbc-casper-simulator)
+
 CBC Casper simulator & visualizer
 
 ### Mission
