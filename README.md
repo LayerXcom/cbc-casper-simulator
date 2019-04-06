@@ -53,5 +53,6 @@ For more details, see `spec` directory.
 ### Run tests
 
 ```
+pip install -r requirements-test.txt -r requirements.txt
 pytest
 ```
