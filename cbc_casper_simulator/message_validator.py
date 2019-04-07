@@ -1,6 +1,7 @@
 from __future__ import annotations
 from result import Ok, Err, Result
-from cbc_casper_simulator.state import State
+# FIXME: Resolve circular reference
+# from cbc_casper_simulator.state import State
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.error import Error, MessageNotJustifiedError
 from cbc_casper_simulator.justification import Justification
