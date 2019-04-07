@@ -91,5 +91,8 @@ class Store:
             hash_or_message, int) else hash_or_message.hash
         return message_hash in self.messages
 
+    def genesis_block(self) -> Block:
+        return self.genesis.estimate
+
     def dump(self, state=None):
         return [m.dump(state, self.parent_message(m.hash)) for m in self.messages.values()]

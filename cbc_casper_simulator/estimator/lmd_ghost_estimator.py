@@ -11,10 +11,10 @@ class LMDGhostEstimator:
         scores: Dict[Block, float] = cls.score(state, justification)
         store: Store = state.store
 
-        best_block = store.last_finalized_block
+        best_block = store.genesis_block()
         while store.has_children_blocks(best_block):
             best_block = max(store.children_blocks(
-                best_block), key=lambda x: scores[x])
+                best_block), key=lambda x: scores.get(x, 0))
         return Block(best_block.hash)
 
     @classmethod
