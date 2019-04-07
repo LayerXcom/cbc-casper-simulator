@@ -19,4 +19,3 @@ class MessageNotJustifiedError(MessageValidationError):
             message_hash) for message_hash in message_hashes]
         reason = " ".join(errors)
         super().__init__(reason)
-

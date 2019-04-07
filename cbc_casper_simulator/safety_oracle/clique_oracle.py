@@ -1,5 +1,5 @@
-from result import Ok, Err, Result
-from cbc_casper_simulator.error import *
+from result import Ok, Result
+from cbc_casper_simulator.error import Error
 
 
 class CliqueOracle:

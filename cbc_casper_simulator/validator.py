@@ -3,9 +3,9 @@ from cbc_casper_simulator.state import State
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator as Estimator
 from cbc_casper_simulator.util.ticker import Ticker
-from cbc_casper_simulator.error import *
+from cbc_casper_simulator.error import Error
 import random as r
-from result import Ok, Err, Result
+from result import Result
 
 
 class Validator:
