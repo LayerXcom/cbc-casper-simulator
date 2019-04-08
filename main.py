@@ -1,5 +1,6 @@
-from cbc_casper_simulator.examples.broadcast import simulate as broadcast
-from cbc_casper_simulator.examples.lmd_ghost import simulate as lmd_ghost
+# NOTE: Do not create png files for now
+# from cbc_casper_simulator.examples.broadcast import simulate as broadcast
+# from cbc_casper_simulator.examples.lmd_ghost import simulate as lmd_ghost
 from cbc_casper_simulator.examples.simple import run as simple_run
 import argparse
 

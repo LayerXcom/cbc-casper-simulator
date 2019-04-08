@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.block import Block
-from cbc_casper_simulator.justification import Justification
 from typing import TYPE_CHECKING
 from typing import Union
 if TYPE_CHECKING:
