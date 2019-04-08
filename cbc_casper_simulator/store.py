@@ -42,7 +42,7 @@ class Store:
         return {v: l[-1] for (v, l) in self.message_history.items()}
 
     def latest_messages(self) -> Dict['Validator', Message]:
-        return {v: self.to_message(l[-1]) for (v, l) in self.message_history.items()}
+        return {v: self.message(l[-1]) for (v, l) in self.message_history.items()}
 
     def parent_message(self, hash_or_message: Union[int, Message]) -> Optional[Message]:
         message = self.messages[hash_or_message] if isinstance(
