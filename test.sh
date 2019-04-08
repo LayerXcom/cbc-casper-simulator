@@ -1,7 +1,8 @@
 #!/bin/sh
+set -e
 
-flake8
+pip install -r requirements.txt -r requirements-dev.txt -r requirements-test.txt
 
-pip install -r requirements.txt -r requirements-test.txt
+flake8 --show-source --statistics
 
 pytest

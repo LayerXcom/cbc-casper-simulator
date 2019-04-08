@@ -79,5 +79,3 @@ def test_store():
     assert not store.justified(000)
 
     assert store.genesis_block() == genesis.estimate
-
-
