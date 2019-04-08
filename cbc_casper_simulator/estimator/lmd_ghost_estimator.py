@@ -12,9 +12,11 @@ class LMDGhostEstimator:
         store: Store = state.store
 
         best_block = store.genesis_block()
+
         while store.has_children_blocks(best_block):
+            # If "tie" exists, choose the block with the smallest hash.
             best_block = max(store.children_blocks(
-                best_block), key=lambda x: scores.get(x, 0))
+                best_block), key=lambda block: (scores.get(block, 0), -block.hash))
         return Block(best_block.hash)
 
     @classmethod
