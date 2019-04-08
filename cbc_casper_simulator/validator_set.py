@@ -40,3 +40,10 @@ class ValidatorSet:
         for i in range(num):
             validators.append(Validator("v{}".format(i), r.random(), ticker))
         return ValidatorSet(validators)
+
+    @classmethod
+    def with_equal_weight(cls, num, ticker) -> ValidatorSet:
+        validators: List[Validator] = []
+        for i in range(num):
+            validators.append(Validator("v{}".format(i), 1.0, ticker))
+        return ValidatorSet(validators)
