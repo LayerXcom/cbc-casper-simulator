@@ -7,21 +7,20 @@ from typing import Dict
 
 class LMDGhostEstimator:
     @classmethod
-    def estimate(cls, state: State, justification: Justification) -> Block:
+    def head(cls, state: State, justification: Justification) -> Block:
         scores: Dict[Block, float] = cls.score(state, justification)
         store: Store = state.store
 
         best_block = store.genesis_block()
-
         while store.has_children_blocks(best_block):
             # If "tie" exists, choose the block with the smallest hash.
             best_block = max(store.children_blocks(
                 best_block), key=lambda block: (scores.get(block, 0), -block.hash))
-        return Block(best_block.hash)
+        return best_block
 
     @classmethod
     def verify(cls, state: State, block: Block, justification: Justification) -> bool:
-        return cls.estimate(state, justification) == block
+        return cls.head(state, justification) == block
 
     @classmethod
     def score(cls, state: State, justification: Justification) -> Dict[Block, float]:
@@ -47,11 +46,9 @@ class LMDGhostEstimator:
                 if message['estimate']['hash'] == block.hash:
                     dumped_state['messages'][i]['score'] = score
 
-        estimate: Block = cls.estimate(state, justification).dump()
-        estimate['parent_message_hash'] = state.store.to_message(
-            estimate['parent_hash']).hash
+        head: Block = cls.head(state, justification)
         return {
-            "estimate": estimate,
+            "head": head.dump(),
             "last_finalized_message": state.store.to_message(state.store.last_finalized_block).hash,
             "latest_messages": justification.dump(state),
             "validators": [
