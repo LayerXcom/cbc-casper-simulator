@@ -1,6 +1,8 @@
 from __future__ import annotations
 from cbc_casper_simulator.state import State
 from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.justification import Justification
+from cbc_casper_simulator.block import Block
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator as Estimator
 from cbc_casper_simulator.util.ticker import Ticker
 from cbc_casper_simulator.error import Error
@@ -22,16 +24,10 @@ class Validator:
         self.hash: int = r.randint(1, 100000000000000)
 
     def create_message(self) -> Message:
-        sender = self
-        justification = self.state.justification()
-        estimate = Estimator.estimate(self.state, justification)
-        message = Message(
-            sender,
-            estimate,
-            justification,
-            self.state.current_slot()
-        )
-        return message
+        justification: Justification = self.state.justification()
+        head: Block = Estimator.head(self.state, justification)
+        estimate: Block = Block(head.hash)
+        return Message(self, estimate, justification, self.state.current_slot())
 
     def add_message(self, message: Message) -> Result[Error, bool]:
         return self.state.transition(message)
