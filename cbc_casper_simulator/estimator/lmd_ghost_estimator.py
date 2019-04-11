@@ -26,7 +26,7 @@ class LMDGhostEstimator:
     def score(cls, state: State, justification: Justification) -> Dict[Block, float]:
         scores: Dict[Block, float] = dict()
         store: Store = state.store
-        for v, m in justification.latest_messages.items():
+        for v, m in justification.latest_message_hashes.items():
             current_block = store.to_block(m)
             while not current_block.is_genesis():
                 scores[current_block] = scores.get(
@@ -56,7 +56,7 @@ class LMDGhostEstimator:
                     "name": v.name,
                     "weight": v.weight
                 }
-                for v in justification.latest_messages.keys()
+                for v in justification.latest_message_hashes.keys()
             ],
             "state": dumped_state
         }
