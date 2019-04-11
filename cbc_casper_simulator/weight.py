@@ -11,6 +11,6 @@ class Weight:
     def weights(cls, state: State) -> Dict['Validator', float]:
         weights: Dict[Validator, float] = dict()
         # TODO: implement
-        for validator in state.justification().latest_messages:
+        for validator in state.justification().latest_message_hashes:
             weights[validator] = r.random()
         return weights
