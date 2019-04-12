@@ -6,9 +6,10 @@ from graphviz import Digraph
 
 def simulate(render=True):
     yaml_file = "./output/output.yaml"
-    simulator = BroadCastAndReceiveSimulator(Config.default())
+    config = Config.default()
+    simulator = BroadCastAndReceiveSimulator(config)
     states = []
-    max_slot = 15
+    max_slot = config.max_slot
 
     for slot in range(max_slot):
         network_state = next(simulator)

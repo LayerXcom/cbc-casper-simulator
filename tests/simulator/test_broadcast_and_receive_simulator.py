@@ -4,10 +4,8 @@ from cbc_casper_simulator.network.model import Model as NetworkModel
 
 
 def test_simulate():
-    validator_num = 10
-    max_slot = 100
-    config = Config(validator_num, max_slot)
+    config = Config.default()
     simulator = BroadCastAndReceiveSimulator(config)
-    for i in range(max_slot):
+    for i in range(config.max_slot):
         model = next(simulator)
         assert isinstance(model, NetworkModel)

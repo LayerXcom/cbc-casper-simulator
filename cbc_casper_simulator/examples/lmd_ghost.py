@@ -7,11 +7,10 @@ from graphviz import Digraph
 
 def simulate(render=True):
     yaml_file = "./output/lmd.yaml"
-    validator_num = 10
-    simulator = BroadCastAndReceiveSimulator(
-        Config(validator_num))
+    config = Config.default()
+    simulator = BroadCastAndReceiveSimulator(config)
 
-    for i in range(30):
+    for i in range(config.max_slot):
         next(simulator)
 
     network_state = next(simulator)
