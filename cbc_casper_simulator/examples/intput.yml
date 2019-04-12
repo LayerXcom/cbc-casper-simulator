@@ -1,2 +1,4 @@
 validator_num: 3
 max_slot: 50
+checkpoint_interval: 20
+rotation_ratio: 0.1

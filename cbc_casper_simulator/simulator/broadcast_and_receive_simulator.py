@@ -25,7 +25,6 @@ class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
         if i > self.config.max_slot:
             raise StopIteration
         if i % 3 == 0:
-            self.validator_rotation(i)
             self.broadcast_from_random_validator()
         self.all_validators_receive_all_packets()
         self.ticker.tick()
@@ -42,6 +41,8 @@ class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
     def broadcast_from_random_validator(self):
         sender = self.network.validator_set.choice_one()
         message = sender.create_message()
+        if message.estimate.is_checkpoint(self.config.checkpoint_interval):
+            self.validator_rotation(self.ticker.current())
         message.estimate.active_validators = self.network.validator_set.validators
         res = sender.add_message(message)
         assert res.is_ok(), res.value
@@ -52,4 +53,4 @@ class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
             packets = self.network.receive(receiver)
             for packet in packets:
                 res = receiver.add_message(packet.message)
-                assert res.is_ok(), res.value
+                assert res.is_ok(), "{} ({})".format(res.value, receiver.name)

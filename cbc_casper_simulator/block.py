@@ -26,6 +26,9 @@ class Block:
     def is_genesis(self) -> bool:
         return self.parent_hash is None
 
+    def is_checkpoint(self, checkpoint_interval: int) -> bool:
+        return self.height > 0 and self.height % checkpoint_interval == 0
+
     def dump(self):
         return {
             "height": self.height,
