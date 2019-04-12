@@ -16,10 +16,27 @@ class ValidatorSet:
             res = validator.add_message(self.genesis)
             assert res.is_ok(), res.value
 
-    def add(self, validator: Validator):
-        self.validators.append(validator)
-        res = validator.add_message(self.genesis)
-        assert res.is_ok(), res.value
+    def entry(self, new_validator: Validator, source_validator: Validator):
+        # FIXME: move this to network layer
+        assert new_validator not in self.validators, "{} already exists".format(new_validator.name)
+
+        if new_validator.state.store.genesis is None:
+            res = new_validator.add_message(self.genesis)
+            assert res.is_ok(), res.value
+
+        # FIXME: Do simulation of message arrival from the start for new validator
+        for message in source_validator.state.store.messages.values():
+            if message.is_genesis():
+                continue
+            res = new_validator.add_message(message)
+            assert res.is_ok(), res.value
+
+        self.validators.append(new_validator)
+
+    def exit(self, validator: Validator):
+        # FIXME: move this to network layer
+        assert validator in self.validators, "{} does not exist".format(validator.name)
+        self.validators.remove(validator)
 
     def choice(self, num=1) -> List[Validator]:
         population = min(num, len(self.validators))
