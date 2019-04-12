@@ -23,7 +23,7 @@ class State:
         if checked.is_err():
             return checked
 
-        finalized = self.finalize_message(message)
+        finalized = self.justify_message(message)
         if finalized.is_err():
             return finalized
 
@@ -40,7 +40,7 @@ class State:
 
         return Ok(True)
 
-    def finalize_message(self, message: Message) -> Result[Error, bool]:
+    def justify_message(self, message: Message) -> Result[Error, bool]:
         message.receiver_slot = self.ticker.current()
         self.store.add(message)
         return Ok(True)
