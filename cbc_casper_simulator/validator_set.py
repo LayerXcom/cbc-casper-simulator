@@ -9,7 +9,7 @@ class ValidatorSet:
     def __init__(self, validators: List[Validator]):
         assert len(validators) > 0, "At least one validator is required."
         self.validators = validators
-        self.genesis = Message.genesis(r.choice(self.validators))
+        self.genesis = Message.genesis(r.choice(self.validators), validators)
 
         # Add genesis message to all validators
         for validator in self.validators:

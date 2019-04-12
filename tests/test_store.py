@@ -9,10 +9,11 @@ from cbc_casper_simulator.block import Block
 def test_store():
     ticker = Ticker()
     validator = Validator("v0", 1.0, ticker)
-    genesis = Message.genesis(validator)
+    active_validators = [validator]
+    genesis = Message.genesis(validator, active_validators)
     store = Store()
     store.add(genesis)
-    b1 = Block(genesis.estimate.hash)
+    b1 = Block(genesis.estimate.height + 1, active_validators, genesis.estimate.hash)
     child = Message(validator, b1, Justification(store.latest_message_hashes()), 0)
     store.add(child)
 

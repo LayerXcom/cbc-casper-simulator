@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List
 import random as r
 from typing import TYPE_CHECKING
 from cbc_casper_simulator.block import Block
@@ -25,8 +26,8 @@ class Message:
         self.hash: int = r.randint(1, 100000000000000)
 
     @classmethod
-    def genesis(cls, sender: Validator) -> Message:
-        return Message(sender, Block.genesis(), Justification(), 0)
+    def genesis(cls, sender: Validator, active_validators: List[Validator]) -> Message:
+        return Message(sender, Block.genesis(active_validators), Justification(), 0)
 
     def is_genesis(self) -> bool:
         return self.estimate.is_genesis()
