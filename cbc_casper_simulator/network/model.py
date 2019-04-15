@@ -4,7 +4,7 @@ from cbc_casper_simulator.message import Message
 from cbc_casper_simulator.util.ticker import Ticker
 from cbc_casper_simulator.network.packet import Packet
 from cbc_casper_simulator.network.buffer import Buffer
-from typing import List
+from typing import List, Optional
 import random as r
 
 DELAY_MIN = 0
@@ -41,6 +41,26 @@ class Model:
         for receiver in self.validator_set.all():
             if sender != receiver:
                 self.send(message, sender, receiver)
+
+    def join(self, new_validator: Validator, source_validator: Optional[Validator] = None):
+        assert new_validator not in self.validator_set.validators, "{} already exists".format(new_validator.name)
+
+        if source_validator is None:
+            source_validator = self.validator_set.validators[0]
+
+        if new_validator.state.store.genesis is None:
+            res = new_validator.add_message(source_validator.state.store.genesis)
+            assert res.is_ok(), res.value
+
+        # FIXME: Decide appropriate delay for each message
+        for message in source_validator.state.store.messages.values():
+            self.send(message, source_validator, new_validator)
+
+        self.validator_set.validators.append(new_validator)
+
+    def exit(self, validator: Validator):
+        assert validator in self.validator_set.validators, "{} does not exist".format(validator.name)
+        self.validator_set.validators.remove(validator)
 
     def dump(self):
         return {
