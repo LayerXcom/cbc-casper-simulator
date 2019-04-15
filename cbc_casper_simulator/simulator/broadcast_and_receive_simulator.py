@@ -31,11 +31,10 @@ class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
 
     def validator_rotation(self, i):
         # NOTE: Now, we assume the oldest validator exit for simplicity
-        validator = self.network.validator_set.validators[0]
-        self.network.validator_set.exit(validator)
+        oldest_validator = self.network.validator_set.validators[0]
+        self.network.exit(oldest_validator)
         new_validator = Validator("nv{}".format(i), 1.0, self.ticker)
-        source_validator = self.network.validator_set.validators[0]
-        self.network.validator_set.entry(new_validator, source_validator)
+        self.network.join(new_validator)
 
     def broadcast_from_random_validator(self):
         sender = self.network.validator_set.choice_one()
