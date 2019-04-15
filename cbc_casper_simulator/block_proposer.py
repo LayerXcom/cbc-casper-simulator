@@ -1,7 +1,7 @@
 from typing import List, Optional
 from cbc_casper_simulator.validator import Validator
-from cbc_casper_simulator.util.sha256 import SHA256
 import random as r
+import hashlib
 
 
 class BlockProposer:
@@ -21,5 +21,10 @@ class BlockProposer:
     @classmethod
     def gen_hash(cls, slot: int, validators: List[Validator]) -> int:
         sorted_validators = sorted(validators, key=lambda validator: validator.hash)
-        text = str(slot) + " " + ''.join([str(validator.hash) for validator in sorted_validators])
-        return int.from_bytes(SHA256.digest(text), byteorder='little')
+        text = str(slot) + ' ' + ' '.join([str(validator.hash) for validator in sorted_validators])
+        return int.from_bytes(cls.sha256_digest(text), byteorder='little')
+
+    @classmethod
+    def sha256_digest(cls, text: str) -> bytes:
+        m = hashlib.sha256(text.encode('utf-8'))
+        return m.digest()
