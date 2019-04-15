@@ -61,6 +61,12 @@ class Validator:
     def tick(self):
         self.state.tick()
 
+    @classmethod
+    def gen_name(cls, message: Message, slot: int, checkpoint_interval: int, checkpoint_rotation_count: int) -> str:
+        name_prefix = "{}.{}".format(int(message.estimate.height / checkpoint_interval), checkpoint_rotation_count)
+        name = "v{}.{}".format(name_prefix, slot)
+        return name
+
     def dump(self):
         return {
             "name": self.name,
