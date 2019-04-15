@@ -38,7 +38,7 @@ class Validator:
         )
 
     def create_estimate(self) -> Block:
-        head: Block = Estimator.head(self.state, self.state.justification())
+        head: Block = self.head()
         height: int = head.height + 1
         active_validators: List[Validator] = head.active_validators
         parent_hash: int = head.hash
@@ -47,6 +47,10 @@ class Validator:
             active_validators,
             parent_hash
         )
+
+    def head(self) -> Block:
+        # FIXME: Rename
+        return Estimator.head(self.state, self.state.justification())
 
     def add_message(self, message: Message) -> Result[Error, bool]:
         return self.state.transition(message)
