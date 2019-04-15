@@ -24,8 +24,7 @@ class BroadCastAndReceiveSimulator(Iterator[NetworkModel]):
         i = self.ticker.current()
         if i > self.config.max_slot:
             raise StopIteration
-        if i % 3 == 0:
-            self.broadcast_from_random_validator()
+        self.broadcast_from_random_validator()
         self.all_validators_receive_all_packets()
         self.ticker.tick()
         return self.network

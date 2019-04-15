@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List
 from cbc_casper_simulator.state import State
 from cbc_casper_simulator.message import Message
+from cbc_casper_simulator.message_validator import MessageValidator
 from cbc_casper_simulator.justification import Justification
 from cbc_casper_simulator.block import Block
 from cbc_casper_simulator.estimator.lmd_ghost_estimator import LMDGhostEstimator as Estimator
@@ -49,6 +50,9 @@ class Validator:
 
     def add_message(self, message: Message) -> Result[Error, bool]:
         return self.state.transition(message)
+
+    def message_is_to_be_pending(self, message: Message) -> bool:
+        return MessageValidator.justification_is_justified(self.state, message.justification).is_err()
 
     def tick(self):
         self.state.tick()
